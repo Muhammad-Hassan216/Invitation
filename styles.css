@@ -422,3 +422,71 @@ img { max-width:100%; display:block; }
   .hero-paper { transform:none; }
   .js .reveal { opacity:1; transform:none; }
 }
+
+/* Continuous soundtrack controls, intentionally separate from card dialogs. */
+.music-dock {
+  position: fixed;
+  right: clamp(.85rem, 2.5vw, 2.5rem);
+  bottom: clamp(.85rem, 2.3vw, 2rem);
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(13px);
+  pointer-events: none;
+  transition: opacity .4s ease, transform .4s ease, visibility .4s;
+}
+body.music-visible .music-dock {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.music-dock-caption {
+  display: none;
+  color: #eee0c7;
+  font-size: .58rem;
+  letter-spacing: .19em;
+  text-shadow: 0 2px 8px rgba(0,0,0,.5);
+}
+.music-toggle {
+  min-height: 3.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .52rem;
+  border: 1px solid rgba(232,204,150,.62);
+  border-radius: 99px;
+  padding: .65rem 1rem;
+  background: rgba(41, 22, 36, .94);
+  color: #f9e9cc;
+  box-shadow: 0 12px 38px rgba(24,9,20,.28);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: .76rem;
+  letter-spacing: .025em;
+  transition: border-color .2s ease, background .2s ease, transform .2s ease;
+}
+.music-toggle:hover { background: #49283f; border-color: #dfbd82; transform: translateY(-2px); }
+.music-toggle:focus-visible { outline: 3px solid #dfbd82; outline-offset: 4px; }
+.music-icon { font-family: Georgia, serif; color: #e6c58b; font-size: 1.25rem; line-height: 1; }
+.music-indicator { display: inline-flex; align-items: center; gap: 2px; height: 14px; margin-left: 2px; }
+.music-indicator i { display: block; width: 2px; height: 5px; background: #e6c58b; border-radius: 4px; }
+.music-dock.is-playing .music-indicator i { animation: musicWave .85s infinite alternate ease-in-out; }
+.music-dock.is-playing .music-indicator i:nth-child(2) { animation-delay: .22s; }
+.music-dock.is-playing .music-indicator i:nth-child(3) { animation-delay: .43s; }
+.music-dock.is-playing .music-indicator i:nth-child(4) { animation-delay: .10s; }
+@keyframes musicWave { from { height: 3px; } to { height: 14px; } }
+.visually-hidden { position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+@media (max-width: 640px) {
+  .music-dock { right: .75rem; bottom: .75rem; }
+  .music-toggle { min-height: 3.15rem; padding: .65rem .85rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .music-dock, .music-toggle { transition: none; }
+  .music-dock.is-playing .music-indicator i { animation: none; height: 8px; }
+}

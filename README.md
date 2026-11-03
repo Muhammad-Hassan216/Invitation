@@ -1,26 +1,32 @@
-# Pervisha & Waleed — Royal Wedding Invitation
+# Pervisha & Waleed — Royal Wedding Invitation with Background Music
 
-An original responsive wedding invitation microsite. Designed with a realistic interactive envelope opening, botanical invitation cover, two expandable event folios, countdown, WhatsApp RSVP and downloadable calendar invitations.
+This is the updated royal invitation site with envelope-opening animation, two folio event cards, countdown, WhatsApp RSVP, date downloads, and one gentle continuous soundtrack.
 
-## How to open
+## Music setup (important)
 
-Open `index.html` directly in a browser or deploy the whole folder to Vercel (framework: Other; output directory: `.`). `styles.css`, `script.js` and both SVG files in `assets/` must stay next to the HTML.
+The included `assets/wedding-song.mp3` is a short **original romantic instrumental demo**, created specifically for this project (not a popular commercial song). It makes the website fully testable now.
 
-A self-contained HTML version is also included in the separate download. No build step, framework or backend is required. Google Fonts are requested online; system serif fonts are used when offline.
+To use your chosen romantic song:
 
-## Confirmed event details
+1. Use an MP3 file you own or have permission to publish on a public website.
+2. Rename it to exactly **`wedding-song.mp3`**.
+3. Replace the existing `assets/wedding-song.mp3` with your file (same name and path).
+4. Deploy this entire folder to Vercel again. If you use GitHub, push the new file to the linked repository. If you deploy files manually, upload the updated folder.
 
-- Mehndi: Thursday, 26 Nov 2026, from 7:00 PM, at home, Moh. Naiyamat Pura. Hosted by Muqadsa Laique & Noor Shakeel.
-- Baraat: Friday, 27 Nov 2026, 7:00–10:00 PM, Bhiya Marquee, Bypass Road, **Gujrat**. Exact map URL: https://maps.app.goo.gl/3RZAnP68aaE3Gpfh6
-- Bride: Pervisha Laique, daughter of Laique Akhtar Khan.
-- Groom: Waleed Khan, son of Shahid Mahmood Khan.
+Do **not** rename the HTML/CSS/JS, and do not put a Google Drive or YouTube link in place of the MP3. Those do not function as an HTML audio source.
 
-**Note:** Mehndi ending time has not been supplied. The Mehndi `.ics` calendar file intentionally contains only a start time and says the end time is unconfirmed.
+When a guest taps **Open your invitation**, music starts at low volume and smoothly fades in. A floating **Music on / Music off** toggle lets guests pause and resume at any point. Browsers can block sound without a tap; in that case guests can tap the music button. Music continues while scrolling and opening invitation details. No backend needed.
 
-## RSVP
+## Publish on Vercel
 
-The form does not collect or store information on a server. It prepares a WhatsApp message for one of the two family contact numbers from the supplied site. The guest must still press Send in WhatsApp.
+- Upload the project folder to Vercel, or push it to the existing GitHub repository and deploy.
+- Framework preset: Other / static site. Build command: none. Output directory: `.`.
+- Keep `index.html`, `styles.css`, `script.js`, and `assets/` together.
+- The one-file HTML download embeds the included demo MP3 and image assets. Replacing the song in that one-file version requires rebuilding it; the ZIP is easier for custom songs.
 
-## Motion and accessibility
+## Confirmed details
 
-Opening animations are initiated by the guest; there is no music. Native HTML dialogs are closable via Escape or the close button. Reduced-motion preferences are respected. The invitation still reads without JavaScript (minus interactive features).
+- Mehndi: Thursday, 26 November 2026, from 7 PM, at home, Moh. Naiyamat Pura. Hosted by Muqadsa Laique & Noor Shakeel.
+- Baraat: Friday, 27 November 2026, 7–10 PM, Bhiya Marquee, Bypass Road, Gujrat. https://maps.app.goo.gl/3RZAnP68aaE3Gpfh6
+- Mehndi end time is intentionally not invented in the downloadable calendar file.
+- WhatsApp RSVP only opens a prepared message. The visitor sends it from their own WhatsApp app.

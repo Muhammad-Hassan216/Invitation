@@ -17,7 +17,7 @@
 <body>
   <a class="skip-link" href="#home">Skip to invitation</a>
 
-  <!-- Original envelope opening experience; dismissible without sound -->
+  <!-- Envelope reveals the invitation; music begins on the guest's opening tap. -->
   <div class="opening-screen" id="opening-screen" role="dialog" aria-modal="true" aria-labelledby="opening-title">
     <div class="opening-stars" aria-hidden="true"></div>
     <p class="opening-heading" id="opening-title">AN INVITATION, SEALED WITH LOVE</p>
@@ -35,6 +35,20 @@
     </div>
     <button class="opening-trigger" id="open-invitation" type="button"><span>Open your invitation</span><span aria-hidden="true">✦</span></button>
     <p class="opening-hint">A special invitation awaits you</p>
+  </div>
+
+  <!-- One continuous soundtrack for the entire invitation. Replace only assets/wedding-song.mp3 for your chosen licensed song. -->
+  <audio id="wedding-music" preload="auto" loop aria-label="Wedding background music">
+    <source src="assets/wedding-song.mp3" type="audio/mpeg">
+  </audio>
+  <div class="music-dock" id="music-dock">
+    <span class="music-dock-caption">A LITTLE MUSIC FOR OUR LOVE STORY</span>
+    <button class="music-toggle" id="music-toggle" type="button" aria-label="Pause background music" aria-pressed="true" title="Pause background music">
+      <span class="music-icon" aria-hidden="true">♫</span>
+      <span id="music-toggle-label">Music on</span>
+      <span class="music-indicator" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    </button>
+    <span id="music-status" class="visually-hidden" role="status" aria-live="polite"></span>
   </div>
 
   <header class="site-header">

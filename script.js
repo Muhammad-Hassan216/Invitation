@@ -24,15 +24,93 @@ const openingButton = document.getElementById("open-invitation");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 let invitationOpened = false;
 
+// Browsers allow sound to begin with a real visitor gesture. No unsolicited autoplay.
+// Music stays playing across sections and open event folios until paused manually.
+const weddingMusic = document.getElementById("wedding-music");
+const musicDock = document.getElementById("music-dock");
+const musicToggle = document.getElementById("music-toggle");
+const musicToggleLabel = document.getElementById("music-toggle-label");
+const musicStatus = document.getElementById("music-status");
+const MUSIC_VOLUME = 0.32;
+let musicPlaying = false;
+let musicRequestId = 0;
+let fadeFrame = 0;
+
+function setMusicState(isPlaying, announcement) {
+  musicPlaying = isPlaying;
+  musicDock.classList.toggle("is-playing", isPlaying);
+  musicToggle.setAttribute("aria-pressed", String(isPlaying));
+  const actionLabel = isPlaying ? "Pause background music" : "Play background music";
+  musicToggle.setAttribute("aria-label", actionLabel);
+  musicToggle.title = actionLabel;
+  musicToggleLabel.textContent = isPlaying ? "Music on" : "Music off";
+  if (announcement) musicStatus.textContent = announcement;
+}
+
+function fadeMusicIn() {
+  cancelAnimationFrame(fadeFrame);
+  if (reduceMotion) {
+    weddingMusic.volume = MUSIC_VOLUME;
+    return;
+  }
+  const started = performance.now();
+  const duration = 1500;
+  const animate = (now) => {
+    if (weddingMusic.paused) return;
+    const progress = Math.min(1, (now - started) / duration);
+    weddingMusic.volume = MUSIC_VOLUME * (progress * (2 - progress));
+    if (progress < 1) fadeFrame = requestAnimationFrame(animate);
+  };
+  fadeFrame = requestAnimationFrame(animate);
+}
+
+function startWeddingMusic() {
+  const requestId = ++musicRequestId;
+  cancelAnimationFrame(fadeFrame);
+  weddingMusic.volume = 0;
+  const playRequest = weddingMusic.play();
+  if (!playRequest || typeof playRequest.then !== "function") {
+    setMusicState(true, "Background music playing.");
+    fadeMusicIn();
+    return;
+  }
+  playRequest.then(() => {
+    if (requestId !== musicRequestId) return;
+    setMusicState(true, "Background music playing.");
+    fadeMusicIn();
+  }).catch(() => {
+    if (requestId !== musicRequestId) return;
+    setMusicState(false, "Music could not start. Tap Music off to try again.");
+  });
+}
+
+function pauseWeddingMusic() {
+  ++musicRequestId;
+  cancelAnimationFrame(fadeFrame);
+  weddingMusic.pause();
+  setMusicState(false, "Background music paused.");
+}
+
+musicToggle.addEventListener("click", () => {
+  if (musicPlaying) pauseWeddingMusic();
+  else startWeddingMusic();
+});
+weddingMusic.addEventListener("error", () => {
+  setMusicState(false, "Music file could not be loaded.");
+});
+
 document.body.classList.add("no-scroll");
 function openInvitation() {
   if (invitationOpened) return;
   invitationOpened = true;
+  // Direct call in the opening-button click handler is required by mobile browsers.
+  startWeddingMusic();
   openingScreen.classList.add("is-opening");
   window.setTimeout(() => {
     openingScreen.classList.add("is-complete");
     openingScreen.setAttribute("aria-hidden", "true");
     document.body.classList.remove("no-scroll");
+    document.body.classList.add("music-visible");
     const focusTarget = window.innerWidth <= 1160
       ? document.querySelector(".identity")
       : document.querySelector(".header-cta");
