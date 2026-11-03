@@ -18,14 +18,17 @@ const eventData = {
   }
 };
 
-// Envelope opening: one focused, intentional reveal, no autoplay audio.
+// Envelope opening: music is requested only after the guest opens the invitation.
 const openingScreen = document.getElementById("opening-screen");
 const openingButton = document.getElementById("open-invitation");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 let invitationOpened = false;
 
-// Three real, included ORIGINAL instrumental tracks (NOT commercial recordings).
-// Replace the MP3s with properly licensed song files later; scene switching remains unchanged.
+// Three selected original film-song recordings are NOT bundled in this project.
+// Add legally authorized audio files using these exact names:
+// assets/website-song.mp3 -> Din Shagna Da (Jasleen Royal)
+// assets/mehndi-song.mp3 -> Mehndi Hai Rachnewali (Alka Yagnik)
+// assets/baraat-song.mp3 -> Dulhe Ka Sehra Suhana Lagta Hai (Nusrat Fateh Ali Khan)
 const musicElements = {
   website: document.getElementById("website-music"),
   mehndi: document.getElementById("mehndi-music"),
@@ -38,33 +41,38 @@ const musicDockCaption = document.getElementById("music-dock-caption");
 const musicStatus = document.getElementById("music-status");
 const MUSIC_VOLUME = 0.33;
 const TRACK_LABELS = {
-  website: "Website · romantic instrumental",
-  mehndi: "Mehndi · festive instrumental",
-  baraat: "Baraat · emotional instrumental"
+  website: "Din Shagna Da · Jasleen Royal",
+  mehndi: "Mehndi Hai Rachnewali · Alka Yagnik",
+  baraat: "Dulhe Ka Sehra Suhana Lagta Hai · Nusrat Fateh Ali Khan"
+};
+const TRACK_FILENAMES = {
+  website: "website-song.mp3",
+  mehndi: "mehndi-song.mp3",
+  baraat: "baraat-song.mp3"
 };
 let musicPlaying = false;
+let musicDesired = false; // user opted in by opening the envelope or pressing Play
 let requestedScene = "website";
 let musicRequestId = 0;
 let fadeFrame = 0;
 
-// All three files ship in /assets, so NO missing-file detection and NO shared fallback.
-// Each <audio> has its own physical MP3 with a different musical composition.
-function setMusicState(playing, announcement) {
+function setMusicState(playing, announcement = "") {
   musicPlaying = playing;
   musicDock.classList.toggle("is-playing", playing);
   musicToggle.setAttribute("aria-pressed", String(playing));
-  musicToggle.setAttribute("aria-label", playing ? "Pause music" : "Play music");
-  musicToggle.title = playing ? "Pause music" : "Play music";
-  musicToggleLabel.textContent = playing ? "Music on" : "Music off";
+  musicToggle.setAttribute("aria-label", playing ? "Pause song" : "Play song");
+  musicToggle.title = playing ? "Pause song" : "Play song";
+  musicToggleLabel.textContent = playing ? "Song on" : "Song off";
   musicDockCaption.textContent = TRACK_LABELS[requestedScene].toUpperCase();
   document.querySelectorAll("[data-dialog-music]").forEach(button => {
-    button.textContent = playing ? "♫ Pause music" : "♫ Play music";
+    button.textContent = playing ? "♫ Pause song" : "♫ Play song";
     button.setAttribute("aria-pressed", String(playing));
   });
-  if (announcement) musicStatus.textContent = announcement;
+  musicStatus.textContent = announcement;
+  musicStatus.classList.toggle("is-warning", !playing && announcement.includes("MP3"));
 }
 
-function stopOtherTracks(except) {
+function pauseOtherTracks(except) {
   Object.entries(musicElements).forEach(([scene, audio]) => {
     if (scene !== except) {
       audio.pause();
@@ -77,7 +85,7 @@ function fadeMusicIn(audio, requestId) {
   cancelAnimationFrame(fadeFrame);
   if (reduceMotion) { audio.volume = MUSIC_VOLUME; return; }
   const start = performance.now();
-  const duration = 900;
+  const duration = 1000;
   const tick = (now) => {
     if (requestId !== musicRequestId || audio.paused) return;
     const ratio = Math.min(1, Math.max(0, (now - start) / duration));
@@ -88,25 +96,46 @@ function fadeMusicIn(audio, requestId) {
 }
 
 function startWeddingMusic() {
+  musicDesired = true;
   const requestId = ++musicRequestId;
   cancelAnimationFrame(fadeFrame);
   const scene = requestedScene;
   const audio = musicElements[scene];
-  stopOtherTracks(scene);
+  pauseOtherTracks(scene);
   audio.volume = 0;
-  const promise = audio.play();
-  Promise.resolve(promise).then(() => {
+  // Browser reports NETWORK_NO_SOURCE when no playable MP3 exists.
+  if (audio.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) {
+    setMusicState(false, `Song not uploaded yet. Add authorized MP3: assets/${TRACK_FILENAMES[scene]}`);
+    return;
+  }
+  // No demo song or fallback: if its licensed MP3 isn't uploaded, show a clear message.
+  const missingWatchdog = window.setTimeout(() => {
+    if (requestId === musicRequestId && !musicPlaying && audio.readyState === 0) {
+      audio.pause();
+      setMusicState(false, `Song not uploaded yet. Add authorized MP3: assets/${TRACK_FILENAMES[scene]}`);
+    }
+  }, 4500);
+  let attempt;
+  try { attempt = audio.play(); }
+  catch (error) {
+    if (requestId === musicRequestId) setMusicState(false, `Please add the selected MP3: assets/${TRACK_FILENAMES[scene]}`);
+    return;
+  }
+  Promise.resolve(attempt).then(() => {
+    clearTimeout(missingWatchdog);
     if (requestId !== musicRequestId) { audio.pause(); return; }
     setMusicState(true, `${TRACK_LABELS[scene]} playing.`);
     fadeMusicIn(audio, requestId);
   }).catch(() => {
+    clearTimeout(missingWatchdog);
     if (requestId !== musicRequestId) return;
     audio.pause();
-    setMusicState(false, `Could not start ${TRACK_LABELS[scene]}; tap Music on to try again.`);
+    setMusicState(false, `Song file not found or playback blocked. Add authorized MP3: assets/${TRACK_FILENAMES[scene]}`);
   });
 }
 
 function pauseWeddingMusic() {
+  musicDesired = false;
   ++musicRequestId;
   cancelAnimationFrame(fadeFrame);
   Object.values(musicElements).forEach(audio => audio.pause());
@@ -116,18 +145,18 @@ function pauseWeddingMusic() {
 function switchSoundtrack(scene) {
   if (!Object.prototype.hasOwnProperty.call(musicElements, scene)) return;
   if (requestedScene === scene) return;
-  const wasPlaying = musicPlaying;
   ++musicRequestId;
   cancelAnimationFrame(fadeFrame);
   Object.values(musicElements).forEach(audio => audio.pause());
   requestedScene = scene;
-  setMusicState(false, `Now selected: ${TRACK_LABELS[scene]}.`);
-  // A guest's manual pause is respected; card opening does not unmute them.
-  if (wasPlaying) startWeddingMusic();
+  setMusicState(false);
+  // On card open, try its own selected song even if the website song was missing.
+  // If the user pressed pause, respect it when switching cards.
+  if (musicDesired) startWeddingMusic();
 }
 
 function toggleMusic() {
-  if (musicPlaying) pauseWeddingMusic();
+  if (musicDesired) pauseWeddingMusic();
   else startWeddingMusic();
 }
 musicToggle.addEventListener("click", toggleMusic);
@@ -136,7 +165,7 @@ document.querySelectorAll("[data-dialog-music]").forEach(button => button.addEve
 Object.entries(musicElements).forEach(([scene, audio]) => {
   audio.addEventListener("error", () => {
     if (requestedScene === scene) {
-      setMusicState(false, `Audio file for ${scene} is missing or could not be decoded.`);
+      setMusicState(false, `Song file not found. Add authorized MP3: assets/${TRACK_FILENAMES[scene]}`);
     }
   });
 });

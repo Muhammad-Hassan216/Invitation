@@ -500,3 +500,16 @@ body.music-visible .music-dock {
     text-align: right;
   }
 }
+
+/* Clear notice only when a selected song MP3 is absent. */
+.music-status { display: none; }
+.music-status.is-warning {
+  display: block;
+  max-width: min(19rem, 65vw);
+  padding: .5rem .7rem;
+  background: rgba(42,22,36,.94);
+  border: 1px solid rgba(223,189,130,.45);
+  color: #ffe2b5;
+  font: 12px/1.45 system-ui, sans-serif;
+  border-radius: .5rem;
+}

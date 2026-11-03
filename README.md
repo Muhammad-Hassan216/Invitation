@@ -1,46 +1,44 @@
-# Pervisha & Waleed — 3 Working Music Tracks (FIXED)
+# Pervisha & Waleed — Selected Wedding Songs (NO DEMO MUSIC)
 
-## Why the older version played the same sound everywhere
-The previous ZIP contained only `assets/wedding-song.mp3`. The other song paths were missing; the player fell back to the same demo each time. The issue is now fixed.
+This version is prepared for **the three actual songs you selected**. The demo instrumentals from the previous ZIP were removed completely. **No commercial song recording is included.** The page will be silent until you supply the audio recordings you have rights to publish.
 
-## Included RIGHT NOW — three different audio files
+## Exact files to provide in `assets/`
 
-| Location | Included and playable | File |
+| Scene | Exact selected song | Required file |
 | --- | --- | --- |
-| Website (envelope, story, countdown, RSVP) | Original soft romantic instrumental | `assets/website-song.mp3` |
-| Mehndi card open | Original lively festive Mehndi instrumental | `assets/mehndi-song.mp3` |
-| Baraat card open | Original slow emotional Baraat instrumental | `assets/baraat-song.mp3` |
+| Website / envelope / general sections | **Din Shagna Da — Jasleen Royal** | `assets/website-song.mp3` |
+| Mehndi invitation opened | **Mehndi Hai Rachnewali — Alka Yagnik** | `assets/mehndi-song.mp3` |
+| Baraat invitation opened | **Dulhe Ka Sehra Suhana Lagta Hai — Nusrat Fateh Ali Khan** | `assets/baraat-song.mp3` |
 
-All three MP3 files are INCLUDED in the ZIP. They are separate musical compositions, not renamed copies of one song. They were generated as original demo music for this project.
+**IMPORTANT:** Please upload files from a source that permits publishing them on a public website. Downloading a track from a streaming subscription or linking to YouTube does not, by itself, give hosting permission. If you do not have permission to embed these recordings, get an appropriate license or use another legally publishable recording.
 
-## Requested film songs: not included
-You previously chose these three commercially released songs:
-- Website: **Din Shagna Da** — Jasleen Royal
-- Mehndi: **Mehndi Hai Rachnewali** — Alka Yagnik
-- Baraat: **Dulhe Ka Sehra Suhana Lagta Hai** — Nusrat Fateh Ali Khan
+## How switching works
 
-These exact recordings are NOT in the package. To use the songs, provide licensed MP3 copies that you are authorized to publish. Replace the matching MP3 file in `assets/` with the new one, keeping **the exact filename**. No code change is needed. Using a YouTube link or streaming account is not a license to host the audio.
+1. Guest clicks the envelope -> website song is selected.
+2. Opens Mehndi card -> Mehndi recording plays, website audio stops.
+3. Closes card -> website song resumes.
+4. Opens Baraat card -> Baraat recording plays, website audio stops.
+5. Closes Baraat -> website song resumes.
+6. Guest may pause/resume at any time; card changes respect manual pauses.
 
-## Functionality tested
-- Open envelope -> website music starts on user interaction (browser autoplay policy)
-- Open Mehndi -> website music pauses, Mehndi starts
-- Close Mehndi -> website resumes
-- Open Baraat -> website pauses, Baraat starts
-- Close Baraat -> website resumes
-- Music on/off button and in-card play/pause buttons
-- Manual pause stays paused when opening and closing cards
-- Tested on desktop (1440px) and mobile (390px) Chromium with audio currentTime and source switching assertions
+If one MP3 is missing, the player **does not play any substitute music**. Instead it displays the missing filename; other scenes work if their own MP3s have been supplied.
 
-## Deploy to Vercel
-1. Extract the ZIP.
-2. Upload/deploy the extracted folder with `index.html` and `assets/` together to your current Vercel project.
-3. Visit your live URL and refresh (Ctrl+Shift+R) to avoid old cached assets.
-4. Verify three URLs on your live domain: `/assets/website-song.mp3`, `/assets/mehndi-song.mp3`, `/assets/baraat-song.mp3`. They should load playable audio, NOT a 404 page.
-5. Press `Open your invitation`, then open each card and listen for a different track.
+## Vercel upload
 
-**The standalone HTML** also includes all three instrumentals embedded inside it; it is larger, but useful for direct offline testing.
+Place the three licensed MP3s with the filenames above inside `assets/` **before uploading** the folder to Vercel. Keep the project structure:
 
-## Wedding information preserved
-- Mehndi: 26 November 2026, 7 PM onwards, At Home, Moh. Naiyamat Pura.
-- Baraat: 27 November 2026, 7 PM–10 PM, Bhiya Marquee, Bypass Road, Gujrat.
-- Venue map: https://maps.app.goo.gl/3RZAnP68aaE3Gpfh6
+```
+index.html
+script.js
+styles.css
+assets/
+  floral-corner.svg
+  rosette.svg
+  website-song.mp3    <- you add
+  mehndi-song.mp3     <- you add
+  baraat-song.mp3     <- you add
+```
+
+Deploy the extracted project folder, then open the Vercel site and test the envelope and both event cards. To confirm files served correctly, visit `https://YOURDOMAIN/assets/mehndi-song.mp3` etc. These URLs should return playable audio, not a 404.
+
+The standalone HTML is not provided here because audio cannot be embedded until the actual files exist.

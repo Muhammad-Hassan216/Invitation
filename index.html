@@ -37,25 +37,25 @@
     <p class="opening-hint">A special invitation awaits you</p>
   </div>
 
-  <!-- THREE distinct original demo instrumentals included. Commercial songs are NOT included. -->
-  <!-- Replace files in assets/ with licensed recordings using the exact same filenames. -->
-  <audio id="website-music" preload="auto" loop aria-label="Website romantic instrumental">
+  <!-- Selected REAL SONG slots. Their recordings are not included; add licensed MP3s to assets/. -->
+  <!-- Website: Din Shagna Da · Mehndi: Mehndi Hai Rachnewali · Baraat: Dulhe Ka Sehra Suhana Lagta Hai -->
+  <audio id="website-music" preload="auto" loop aria-label="Din Shagna Da — website soundtrack">
     <source src="assets/website-song.mp3" type="audio/mpeg">
   </audio>
-  <audio id="mehndi-music" preload="auto" loop aria-label="Mehndi festive instrumental">
+  <audio id="mehndi-music" preload="auto" loop aria-label="Mehndi Hai Rachnewali — Mehndi soundtrack">
     <source src="assets/mehndi-song.mp3" type="audio/mpeg">
   </audio>
-  <audio id="baraat-music" preload="auto" loop aria-label="Baraat emotional instrumental">
+  <audio id="baraat-music" preload="auto" loop aria-label="Dulhe Ka Sehra Suhana Lagta Hai — Baraat soundtrack">
     <source src="assets/baraat-song.mp3" type="audio/mpeg">
   </audio>
   <div class="music-dock" id="music-dock">
-    <span class="music-dock-caption" id="music-dock-caption">WEBSITE · ROMANTIC INSTRUMENTAL</span>
+    <span class="music-dock-caption" id="music-dock-caption">WEBSITE · DIN SHAGNA DA</span>
     <button class="music-toggle" id="music-toggle" type="button" aria-label="Play music" aria-pressed="false" title="Play music">
       <span class="music-icon" aria-hidden="true">♫</span>
       <span id="music-toggle-label">Music off</span>
       <span class="music-indicator" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
     </button>
-    <span id="music-status" class="visually-hidden" role="status" aria-live="polite"></span>
+    <span id="music-status" class="music-status" role="status" aria-live="polite"></span>
   </div>
 
   <header class="site-header">
