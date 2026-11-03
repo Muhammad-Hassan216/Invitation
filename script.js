@@ -24,8 +24,8 @@ const openingButton = document.getElementById("open-invitation");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 let invitationOpened = false;
 
-// Uploaded audio files: we use these exact recordings, not the old demo tracks.
-// assets/barat.mpeg and assets/mahndi.mpeg contain MP3 audio in MPEG containers.
+// All three audio files are the latest user-uploaded MPEG recordings, not demo tracks.
+// assets/website.mpeg, assets/barat.mpeg and assets/mahndi.mpeg contain MPEG Layer III audio.
 const musicElements = {
   website: document.getElementById("website-music"),
   mehndi: document.getElementById("mehndi-music"),
@@ -38,12 +38,12 @@ const musicDockCaption = document.getElementById("music-dock-caption");
 const musicStatus = document.getElementById("music-status");
 const MUSIC_VOLUME = 0.33;
 const TRACK_LABELS = {
-  website: "Wedding background music",
+  website: "Wedding website soundtrack",
   mehndi: "Mehndi recording",
   baraat: "Baraat recording"
 };
 const TRACK_FILENAMES = {
-  website: "website-song.mp3",
+  website: "website.mpeg",
   mehndi: "mahndi.mpeg",
   baraat: "barat.mpeg"
 };

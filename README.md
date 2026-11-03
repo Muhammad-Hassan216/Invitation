@@ -1,25 +1,19 @@
-# Pervisha & Waleed — Wedding Invitation with Uploaded Recordings
+# Pervisha & Waleed — Final Wedding Website with Updated Background Audio
 
-This package contains your uploaded audio files, connected to the exact event cards.
+All three audio files are now the **actual files uploaded by the user** in the most recent turn, not the former instrumental examples.
 
-## Audio connections
+| Where it plays | Bundled filename | Uploaded source |
+|---|---|---|
+| Opening envelope and general website | `assets/website.mpeg` | `website.mpeg` |
+| Mehndi card | `assets/mahndi.mpeg` | `mahndi(1).mpeg` |
+| Baraat card | `assets/barat.mpeg` | `barat(1).mpeg` |
 
-- Envelope + general website: `assets/website-song.mp3` (the website audio you uploaded)
-- Mehndi invitation: **`assets/mahndi.mpeg`** (your exact uploaded MPEG recording; ~23 seconds)
-- Baraat invitation: **`assets/barat.mpeg`** (your exact uploaded MPEG recording; ~45 seconds)
+The background soundtrack plays after the guest taps **Open your invitation**. Opening Mehndi or Baraat pauses it and plays that card's recording. Closing the card resumes the website track. The pause/play button remains available and user pauses are respected.
 
-No old `mehndi-song.mp3` or `baraat-song.mp3` demo is included or used.
+## Deploying to Vercel
 
-## Test it
+Extract this ZIP, then deploy the complete project directory. Keep `index.html`, `script.js`, `styles.css` and the `assets` directory together. Check these live file URLs after deployment: `/assets/website.mpeg`, `/assets/mahndi.mpeg`, `/assets/barat.mpeg`.
 
-1. Open the `index.html` file in a browser or serve this folder with a local web server.
-2. Click **Open your invitation**; website audio starts after the click.
-3. Click **Mehndi**; only `mahndi.mpeg` should play.
-4. Close it, then click **Baraat**; only `barat.mpeg` should play.
-5. Pause/resume with Music button.
+If audio is cached from an earlier deployment, do a hard reload or redeploy the full project. All three files are MPEG Layer III audio, with `.mpeg` extension; the `<source type="audio/mpeg">` declaration is retained for browser compatibility.
 
-## Deploy to Vercel
-
-Upload the **entire folder**, including `assets/`, to your existing project. Do not upload only HTML/JS/CSS; audio files must be deployed too. On Vercel, verify that `/assets/barat.mpeg` and `/assets/mahndi.mpeg` load. If you host recordings of commercial songs publicly, make sure you have the required permission.
-
-Note: The website audio in this package is the uploaded `website-song(1).mp3` file, not a verified commercial song recording.
+Use only recordings you have the permission to publish publicly.
