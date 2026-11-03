@@ -37,25 +37,22 @@
     <p class="opening-hint">A special invitation awaits you</p>
   </div>
 
-  <!-- Royal wedding music system: the original instrumental fallback is included. -->
-  <audio id="wedding-music" preload="auto" loop aria-label="Original romantic instrumental demo">
-    <source src="assets/wedding-song.mp3" type="audio/mpeg">
-  </audio>
-  <!-- Add licensed copies under these exact filenames to activate all three songs. -->
-  <audio id="website-music" preload="none" loop aria-label="Main website song: Din Shagna Da">
+  <!-- THREE distinct original demo instrumentals included. Commercial songs are NOT included. -->
+  <!-- Replace files in assets/ with licensed recordings using the exact same filenames. -->
+  <audio id="website-music" preload="auto" loop aria-label="Website romantic instrumental">
     <source src="assets/website-song.mp3" type="audio/mpeg">
   </audio>
-  <audio id="mehndi-music" preload="none" loop aria-label="Mehndi song: Mehndi Hai Rachnewali">
+  <audio id="mehndi-music" preload="auto" loop aria-label="Mehndi festive instrumental">
     <source src="assets/mehndi-song.mp3" type="audio/mpeg">
   </audio>
-  <audio id="baraat-music" preload="none" loop aria-label="Baraat song: Dulhe Ka Sehra Suhana Lagta Hai">
+  <audio id="baraat-music" preload="auto" loop aria-label="Baraat emotional instrumental">
     <source src="assets/baraat-song.mp3" type="audio/mpeg">
   </audio>
   <div class="music-dock" id="music-dock">
-    <span class="music-dock-caption" id="music-dock-caption">ORIGINAL ROMANTIC INSTRUMENTAL</span>
-    <button class="music-toggle" id="music-toggle" type="button" aria-label="Pause background music" aria-pressed="false" title="Play music">
+    <span class="music-dock-caption" id="music-dock-caption">WEBSITE · ROMANTIC INSTRUMENTAL</span>
+    <button class="music-toggle" id="music-toggle" type="button" aria-label="Play music" aria-pressed="false" title="Play music">
       <span class="music-icon" aria-hidden="true">♫</span>
-      <span id="music-toggle-label">Music on</span>
+      <span id="music-toggle-label">Music off</span>
       <span class="music-indicator" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
     </button>
     <span id="music-status" class="visually-hidden" role="status" aria-live="polite"></span>
@@ -204,7 +201,7 @@
   <dialog class="event-dialog" id="mehndi-dialog" aria-labelledby="mehndi-dialog-title">
     <div class="folio folio-mehndi">
       <div class="folio-art"><div class="folio-art-arch"><img src="assets/rosette.svg" alt=""><small>AN EVENING OF JOY</small><strong>Mehndi</strong><span>26 · 11 · 2026</span></div></div>
-      <div class="folio-details"><button class="dialog-close" type="button" data-close-dialog aria-label="Close Mehndi invitation">×</button><p class="folio-small">THE FIRST CELEBRATION</p><h2 id="mehndi-dialog-title">Mehndi <em>Night</em></h2><p class="folio-copy">Muqadsa Laique and Noor Shakeel joyfully invite you to celebrate the Mehndi ceremony of their beloved sister, <strong>Pervisha Laique.</strong></p><div class="folio-rule">✦</div><div class="folio-fact"><span>WHEN</span><strong>Thursday, 26 November 2026</strong></div><div class="folio-fact"><span>TIME</span><strong>7:00 PM onwards</strong></div><div class="folio-fact"><span>WHERE</span><strong>At Home · Moh. Naiyamat Pura</strong></div><div class="folio-actions"><a href="https://www.google.com/maps/search/?api=1&amp;query=Moh.+Naiyamat+Pura" target="_blank" rel="noopener noreferrer">View location ↗</a><button type="button" data-calendar="mehndi">Save date ↓</button></div></div>
+      <div class="folio-details"><button class="dialog-close" type="button" data-close-dialog aria-label="Close Mehndi invitation">×</button><p class="folio-small">THE FIRST CELEBRATION</p><h2 id="mehndi-dialog-title">Mehndi <em>Night</em></h2><p class="folio-copy">Muqadsa Laique and Noor Shakeel joyfully invite you to celebrate the Mehndi ceremony of their beloved sister, <strong>Pervisha Laique.</strong></p><div class="folio-rule">✦</div><div class="folio-fact"><span>WHEN</span><strong>Thursday, 26 November 2026</strong></div><div class="folio-fact"><span>TIME</span><strong>7:00 PM onwards</strong></div><div class="folio-fact"><span>WHERE</span><strong>At Home · Moh. Naiyamat Pura</strong></div><div class="folio-actions"><a href="https://www.google.com/maps/search/?api=1&amp;query=Moh.+Naiyamat+Pura" target="_blank" rel="noopener noreferrer">View location ↗</a><button type="button" data-calendar="mehndi">Save date ↓</button><button type="button" data-dialog-music aria-label="Pause or play Mehndi music">♫ Pause music</button></div></div>
       <div class="folio-opening-cover" aria-hidden="true"><span>Mehndi</span><small>AN INVITATION FOR YOU</small></div>
     </div>
   </dialog>
@@ -212,7 +209,7 @@
   <dialog class="event-dialog" id="baraat-dialog" aria-labelledby="baraat-dialog-title">
     <div class="folio folio-baraat">
       <div class="folio-art"><div class="folio-art-arch"><img src="assets/rosette.svg" alt=""><small>THE WEDDING CEREMONY</small><strong>Baraat</strong><span>27 · 11 · 2026</span></div></div>
-      <div class="folio-details"><button class="dialog-close" type="button" data-close-dialog aria-label="Close Baraat invitation">×</button><p class="folio-small">THE WEDDING CELEBRATION</p><h2 id="baraat-dialog-title">The <em>Baraat</em></h2><p class="folio-copy">With the blessings of our families, please join us as <strong>Pervisha Laique &amp; Waleed Khan</strong> begin their beautiful new chapter together.</p><div class="folio-rule">✦</div><div class="folio-fact"><span>WHEN</span><strong>Friday, 27 November 2026</strong></div><div class="folio-fact"><span>TIME</span><strong>7:00 PM – 10:00 PM</strong></div><div class="folio-fact"><span>WHERE</span><strong>Bhiya Marquee · Bypass Road, Gujrat</strong></div><div class="folio-actions"><a href="https://maps.app.goo.gl/3RZAnP68aaE3Gpfh6" target="_blank" rel="noopener noreferrer">Get directions ↗</a><button type="button" data-calendar="baraat">Save date ↓</button></div></div>
+      <div class="folio-details"><button class="dialog-close" type="button" data-close-dialog aria-label="Close Baraat invitation">×</button><p class="folio-small">THE WEDDING CELEBRATION</p><h2 id="baraat-dialog-title">The <em>Baraat</em></h2><p class="folio-copy">With the blessings of our families, please join us as <strong>Pervisha Laique &amp; Waleed Khan</strong> begin their beautiful new chapter together.</p><div class="folio-rule">✦</div><div class="folio-fact"><span>WHEN</span><strong>Friday, 27 November 2026</strong></div><div class="folio-fact"><span>TIME</span><strong>7:00 PM – 10:00 PM</strong></div><div class="folio-fact"><span>WHERE</span><strong>Bhiya Marquee · Bypass Road, Gujrat</strong></div><div class="folio-actions"><a href="https://maps.app.goo.gl/3RZAnP68aaE3Gpfh6" target="_blank" rel="noopener noreferrer">Get directions ↗</a><button type="button" data-calendar="baraat">Save date ↓</button><button type="button" data-dialog-music aria-label="Pause or play Baraat music">♫ Pause music</button></div></div>
       <div class="folio-opening-cover" aria-hidden="true"><span>Baraat</span><small>AN INVITATION FOR YOU</small></div>
     </div>
   </dialog>
