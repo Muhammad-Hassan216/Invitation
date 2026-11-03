@@ -37,12 +37,16 @@
     <p class="opening-hint">A special invitation awaits you</p>
   </div>
 
-  <!-- One continuous soundtrack for the entire invitation. Replace only assets/wedding-song.mp3 for your chosen licensed song. -->
+  <!-- Original instrumental demo plays generally. A separate licensed recording can play for the Baraat folio. -->
   <audio id="wedding-music" preload="auto" loop aria-label="Wedding background music">
     <source src="assets/wedding-song.mp3" type="audio/mpeg">
   </audio>
+  <!-- Add a licensed recording at assets/baraat-song.mp3. Without it, the original demo continues uninterrupted. -->
+  <audio id="baraat-music" preload="none" loop aria-label="Special Baraat song">
+    <source src="assets/baraat-song.mp3" type="audio/mpeg">
+  </audio>
   <div class="music-dock" id="music-dock">
-    <span class="music-dock-caption">A LITTLE MUSIC FOR OUR LOVE STORY</span>
+    <span class="music-dock-caption" id="music-dock-caption">A LITTLE MUSIC FOR OUR LOVE STORY</span>
     <button class="music-toggle" id="music-toggle" type="button" aria-label="Pause background music" aria-pressed="true" title="Pause background music">
       <span class="music-icon" aria-hidden="true">♫</span>
       <span id="music-toggle-label">Music on</span>

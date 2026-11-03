@@ -24,41 +24,65 @@ const openingButton = document.getElementById("open-invitation");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 let invitationOpened = false;
 
-// Browsers allow sound to begin with a real visitor gesture. No unsolicited autoplay.
-// Music stays playing across sections and open event folios until paused manually.
+// Play ambient music after the guest opens the envelope. Switch to the
+// selected Baraat song only while its folio is open. Never start unprompted.
 const weddingMusic = document.getElementById("wedding-music");
+const baraatMusic = document.getElementById("baraat-music");
 const musicDock = document.getElementById("music-dock");
 const musicToggle = document.getElementById("music-toggle");
 const musicToggleLabel = document.getElementById("music-toggle-label");
+const musicDockCaption = document.getElementById("music-dock-caption");
 const musicStatus = document.getElementById("music-status");
 const MUSIC_VOLUME = 0.32;
 let musicPlaying = false;
 let musicRequestId = 0;
 let fadeFrame = 0;
+let currentTrack = "ambient";
+// Start with the demo until the separate audio file has been verified.
+// This avoids a broken switch when the optional licensed MP3 is missing.
+let baraatTrackMissing = true;
+const baraatSourceUrl = baraatMusic.querySelector("source")?.getAttribute("src") || "";
+if (baraatSourceUrl.startsWith("data:audio/")) {
+  baraatTrackMissing = baraatSourceUrl.length < 100;
+} else if (baraatSourceUrl) {
+  fetch(baraatSourceUrl, { method: "HEAD" })
+    .then((response) => {
+      const contentType = response.headers.get("content-type") || "";
+      baraatTrackMissing = !response.ok || !(/audio\/|application\/octet-stream/i.test(contentType));
+    })
+    .catch(() => { baraatTrackMissing = true; });
+}
+
+function chosenAudio() {
+  return currentTrack === "baraat" && !baraatTrackMissing ? baraatMusic : weddingMusic;
+}
 
 function setMusicState(isPlaying, announcement) {
   musicPlaying = isPlaying;
   musicDock.classList.toggle("is-playing", isPlaying);
   musicToggle.setAttribute("aria-pressed", String(isPlaying));
-  const actionLabel = isPlaying ? "Pause background music" : "Play background music";
+  const actionLabel = isPlaying ? "Pause music" : "Play music";
   musicToggle.setAttribute("aria-label", actionLabel);
   musicToggle.title = actionLabel;
   musicToggleLabel.textContent = isPlaying ? "Music on" : "Music off";
+  musicDockCaption.textContent = currentTrack === "baraat" && !baraatTrackMissing
+    ? "A MELODY FOR THE BARAAT"
+    : "A LITTLE MUSIC FOR OUR LOVE STORY";
   if (announcement) musicStatus.textContent = announcement;
 }
 
-function fadeMusicIn() {
+function fadeMusicIn(audio, requestId) {
   cancelAnimationFrame(fadeFrame);
   if (reduceMotion) {
-    weddingMusic.volume = MUSIC_VOLUME;
+    audio.volume = MUSIC_VOLUME;
     return;
   }
   const started = performance.now();
   const duration = 1500;
   const animate = (now) => {
-    if (weddingMusic.paused) return;
-    const progress = Math.min(1, (now - started) / duration);
-    weddingMusic.volume = MUSIC_VOLUME * (progress * (2 - progress));
+    if (requestId !== musicRequestId || audio.paused) return;
+    const progress = Math.max(0, Math.min(1, (now - started) / duration));
+    audio.volume = MUSIC_VOLUME * (progress * (2 - progress));
     if (progress < 1) fadeFrame = requestAnimationFrame(animate);
   };
   fadeFrame = requestAnimationFrame(animate);
@@ -67,28 +91,55 @@ function fadeMusicIn() {
 function startWeddingMusic() {
   const requestId = ++musicRequestId;
   cancelAnimationFrame(fadeFrame);
-  weddingMusic.volume = 0;
-  const playRequest = weddingMusic.play();
-  if (!playRequest || typeof playRequest.then !== "function") {
-    setMusicState(true, "Background music playing.");
-    fadeMusicIn();
-    return;
-  }
-  playRequest.then(() => {
+  const audio = chosenAudio();
+  const other = audio === weddingMusic ? baraatMusic : weddingMusic;
+  other.pause();
+  audio.volume = 0;
+  // `play()` happens synchronously inside the tap/click handler for mobile browsers.
+  const playRequest = audio.play();
+  const onSuccess = () => {
     if (requestId !== musicRequestId) return;
-    setMusicState(true, "Background music playing.");
-    fadeMusicIn();
-  }).catch(() => {
+    setMusicState(true, currentTrack === "baraat" && !baraatTrackMissing
+      ? "Baraat music playing." : "Background music playing.");
+    fadeMusicIn(audio, requestId);
+  };
+  const onFailure = () => {
     if (requestId !== musicRequestId) return;
+    if (audio === baraatMusic) {
+      // The commercial recording is NOT bundled. Keep the original demo running
+      // rather than leaving visitors with a broken player.
+      baraatTrackMissing = true;
+      startWeddingMusic();
+      musicStatus.textContent = "Special Baraat recording is not installed; instrumental music is playing.";
+      return;
+    }
     setMusicState(false, "Music could not start. Tap Music off to try again.");
-  });
+  };
+  if (playRequest && typeof playRequest.then === "function") {
+    playRequest.then(onSuccess).catch(onFailure);
+  } else {
+    onSuccess();
+  }
 }
 
 function pauseWeddingMusic() {
   ++musicRequestId;
   cancelAnimationFrame(fadeFrame);
   weddingMusic.pause();
-  setMusicState(false, "Background music paused.");
+  baraatMusic.pause();
+  setMusicState(false, "Music paused.");
+}
+
+function switchSoundtrack(track) {
+  if (currentTrack === track) return;
+  const wasPlaying = musicPlaying;
+  ++musicRequestId;
+  cancelAnimationFrame(fadeFrame);
+  weddingMusic.pause();
+  baraatMusic.pause();
+  currentTrack = track;
+  setMusicState(false);
+  if (wasPlaying) startWeddingMusic();
 }
 
 musicToggle.addEventListener("click", () => {
@@ -96,7 +147,9 @@ musicToggle.addEventListener("click", () => {
   else startWeddingMusic();
 });
 weddingMusic.addEventListener("error", () => {
-  setMusicState(false, "Music file could not be loaded.");
+  if (chosenAudio() === weddingMusic) {
+    setMusicState(false, "Instrumental music could not be loaded.");
+  }
 });
 
 document.body.classList.add("no-scroll");
@@ -173,6 +226,7 @@ document.querySelectorAll("[data-open-event]").forEach((button) => {
     lastOpenButton = button;
     dialog.classList.remove("is-revealed");
     dialog.showModal();
+    if (button.dataset.openEvent === "baraat") switchSoundtrack("baraat");
     document.body.classList.add("no-scroll");
     requestAnimationFrame(() => requestAnimationFrame(() => dialog.classList.add("is-revealed")));
   });
@@ -184,6 +238,7 @@ dialogs.forEach((dialog) => {
     if (event.target === dialog) closeDialog(dialog);
   });
   dialog.addEventListener("close", () => {
+    if (dialog.id === "baraat-dialog") switchSoundtrack("ambient");
     dialog.classList.remove("is-revealed");
     document.body.classList.remove("no-scroll");
     if (lastOpenButton) lastOpenButton.focus({ preventScroll: true });

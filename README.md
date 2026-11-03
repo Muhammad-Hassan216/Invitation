@@ -1,32 +1,24 @@
-# Pervisha & Waleed — Royal Wedding Invitation with Background Music
+# Pervisha & Waleed — Baraat Song Ready Website
 
-This is the updated royal invitation site with envelope-opening animation, two folio event cards, countdown, WhatsApp RSVP, date downloads, and one gentle continuous soundtrack.
+This package contains the royal invitation website, envelope animation, interactive Mehndi and Baraat folios, WhatsApp RSVP, calendar buttons, countdown, and a two-track music system.
 
-## Music setup (important)
+## Music: what is installed now
+- `assets/wedding-song.mp3` contains the original, project-made **instrumental demo** and starts on the guest's opening tap.
+- The site is **prepared** to use the romantic Baraat song **Dulhe Ka Sehra Suhana Lagta Hai** (the song containing “Main teri baahon ke jhoole mein pali babul”). **The commercial recording is NOT included.**
+- To add a legally authorized copy, place your MP3 at **`assets/baraat-song.mp3`** (exact filename; do not replace `wedding-song.mp3`). You must have permission to use the recording publicly.
+- When the visitor opens the **Baraat** invitation folio, the page pauses the background instrumental and fades in this special song. When they close the Baraat folio, the original instrumental resumes. During the Mehndi folio the original instrumental continues.
+- The floating **Music on/off** control works on both tracks. If the Baraat MP3 is not installed or fails to load, the original instrumental will play instead.
+- Browsers require a visitor gesture before audio can start. If a browser blocks a start, the visitor can tap the music control.
 
-The included `assets/wedding-song.mp3` is a short **original romantic instrumental demo**, created specifically for this project (not a popular commercial song). It makes the website fully testable now.
+## Deploy to the existing Vercel site
+1. Copy your licensed song into `assets/baraat-song.mp3`.
+2. Verify the site locally using a small static server, e.g. `python -m http.server 8000` in the folder.
+3. Deploy the whole folder to your existing Vercel project (or commit/push it to the connected GitHub repository). If you upload manually, make sure all files in `assets/` are included.
+4. Clear cache or hard-refresh the deployed URL after redeploying if necessary.
 
-To use your chosen romantic song:
+You do **not** need a backend. Do not use a YouTube URL as the MP3 source; it isn't a directly playable audio file.
 
-1. Use an MP3 file you own or have permission to publish on a public website.
-2. Rename it to exactly **`wedding-song.mp3`**.
-3. Replace the existing `assets/wedding-song.mp3` with your file (same name and path).
-4. Deploy this entire folder to Vercel again. If you use GitHub, push the new file to the linked repository. If you deploy files manually, upload the updated folder.
-
-Do **not** rename the HTML/CSS/JS, and do not put a Google Drive or YouTube link in place of the MP3. Those do not function as an HTML audio source.
-
-When a guest taps **Open your invitation**, music starts at low volume and smoothly fades in. A floating **Music on / Music off** toggle lets guests pause and resume at any point. Browsers can block sound without a tap; in that case guests can tap the music button. Music continues while scrolling and opening invitation details. No backend needed.
-
-## Publish on Vercel
-
-- Upload the project folder to Vercel, or push it to the existing GitHub repository and deploy.
-- Framework preset: Other / static site. Build command: none. Output directory: `.`.
-- Keep `index.html`, `styles.css`, `script.js`, and `assets/` together.
-- The one-file HTML download embeds the included demo MP3 and image assets. Replacing the song in that one-file version requires rebuilding it; the ZIP is easier for custom songs.
-
-## Confirmed details
-
-- Mehndi: Thursday, 26 November 2026, from 7 PM, at home, Moh. Naiyamat Pura. Hosted by Muqadsa Laique & Noor Shakeel.
-- Baraat: Friday, 27 November 2026, 7–10 PM, Bhiya Marquee, Bypass Road, Gujrat. https://maps.app.goo.gl/3RZAnP68aaE3Gpfh6
-- Mehndi end time is intentionally not invented in the downloadable calendar file.
-- WhatsApp RSVP only opens a prepared message. The visitor sends it from their own WhatsApp app.
+## Confirmed event details
+- Mehndi: 26 November 2026, 7 PM onwards, At Home, Moh. Naiyamat Pura.
+- Baraat: 27 November 2026, 7–10 PM at Bhiya Marquee, Bypass Road, Gujrat.
+- Venue link: https://maps.app.goo.gl/3RZAnP68aaE3Gpfh6
