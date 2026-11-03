@@ -490,3 +490,13 @@ body.music-visible .music-dock {
   .music-dock, .music-toggle { transition: none; }
   .music-dock.is-playing .music-indicator i { animation: none; height: 8px; }
 }
+
+/* Show which soundtrack is active when enough desktop space is available. */
+@media (min-width: 760px) {
+  .music-dock-caption {
+    display: block;
+    max-width: 15rem;
+    line-height: 1.65;
+    text-align: right;
+  }
+}

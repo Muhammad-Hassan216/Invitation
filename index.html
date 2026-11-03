@@ -37,17 +37,23 @@
     <p class="opening-hint">A special invitation awaits you</p>
   </div>
 
-  <!-- Original instrumental demo plays generally. A separate licensed recording can play for the Baraat folio. -->
-  <audio id="wedding-music" preload="auto" loop aria-label="Wedding background music">
+  <!-- Royal wedding music system: the original instrumental fallback is included. -->
+  <audio id="wedding-music" preload="auto" loop aria-label="Original romantic instrumental demo">
     <source src="assets/wedding-song.mp3" type="audio/mpeg">
   </audio>
-  <!-- Add a licensed recording at assets/baraat-song.mp3. Without it, the original demo continues uninterrupted. -->
-  <audio id="baraat-music" preload="none" loop aria-label="Special Baraat song">
+  <!-- Add licensed copies under these exact filenames to activate all three songs. -->
+  <audio id="website-music" preload="none" loop aria-label="Main website song: Din Shagna Da">
+    <source src="assets/website-song.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="mehndi-music" preload="none" loop aria-label="Mehndi song: Mehndi Hai Rachnewali">
+    <source src="assets/mehndi-song.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="baraat-music" preload="none" loop aria-label="Baraat song: Dulhe Ka Sehra Suhana Lagta Hai">
     <source src="assets/baraat-song.mp3" type="audio/mpeg">
   </audio>
   <div class="music-dock" id="music-dock">
-    <span class="music-dock-caption" id="music-dock-caption">A LITTLE MUSIC FOR OUR LOVE STORY</span>
-    <button class="music-toggle" id="music-toggle" type="button" aria-label="Pause background music" aria-pressed="true" title="Pause background music">
+    <span class="music-dock-caption" id="music-dock-caption">ORIGINAL ROMANTIC INSTRUMENTAL</span>
+    <button class="music-toggle" id="music-toggle" type="button" aria-label="Pause background music" aria-pressed="false" title="Play music">
       <span class="music-icon" aria-hidden="true">♫</span>
       <span id="music-toggle-label">Music on</span>
       <span class="music-indicator" aria-hidden="true"><i></i><i></i><i></i><i></i></span>

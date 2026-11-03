@@ -24,50 +24,63 @@ const openingButton = document.getElementById("open-invitation");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 let invitationOpened = false;
 
-// Play ambient music after the guest opens the envelope. Switch to the
-// selected Baraat song only while its folio is open. Never start unprompted.
-const weddingMusic = document.getElementById("wedding-music");
-const baraatMusic = document.getElementById("baraat-music");
+// Music soundtrack routing: envelope/main site, Mehndi folio, Baraat folio.
+// Commercial recordings are optional. The original demo is our safe fallback.
+// Sound starts only after the visitor actively opens the envelope.
+const musicElements = {
+  demo: document.getElementById("wedding-music"),
+  website: document.getElementById("website-music"),
+  mehndi: document.getElementById("mehndi-music"),
+  baraat: document.getElementById("baraat-music")
+};
 const musicDock = document.getElementById("music-dock");
 const musicToggle = document.getElementById("music-toggle");
 const musicToggleLabel = document.getElementById("music-toggle-label");
 const musicDockCaption = document.getElementById("music-dock-caption");
 const musicStatus = document.getElementById("music-status");
-const MUSIC_VOLUME = 0.32;
+const MUSIC_VOLUME = 0.3;
+const TRACK_LABELS = {
+  demo: "Original romantic instrumental",
+  website: "Din Shagna Da · Wedding soundtrack",
+  mehndi: "Mehndi Hai Rachnewali · Mehndi night",
+  baraat: "Dulhe Ka Sehra · Baraat"
+};
 let musicPlaying = false;
+let requestedScene = "website";
 let musicRequestId = 0;
 let fadeFrame = 0;
-let currentTrack = "ambient";
-// Start with the demo until the separate audio file has been verified.
-// This avoids a broken switch when the optional licensed MP3 is missing.
-let baraatTrackMissing = true;
-const baraatSourceUrl = baraatMusic.querySelector("source")?.getAttribute("src") || "";
-if (baraatSourceUrl.startsWith("data:audio/")) {
-  baraatTrackMissing = baraatSourceUrl.length < 100;
-} else if (baraatSourceUrl) {
-  fetch(baraatSourceUrl, { method: "HEAD" })
-    .then((response) => {
-      const contentType = response.headers.get("content-type") || "";
-      baraatTrackMissing = !response.ok || !(/audio\/|application\/octet-stream/i.test(contentType));
-    })
-    .catch(() => { baraatTrackMissing = true; });
+let currentlyPlayingAudio = null;
+const songAvailable = { website: false, mehndi: false, baraat: false };
+
+// Vercel returns a 404 HTML page for a missing MP3. Check before
+// choosing a commercial song, so it never falsely claims to play one.
+Object.keys(songAvailable).forEach((key) => {
+  const source = musicElements[key].querySelector("source")?.getAttribute("src");
+  if (!source) return;
+  fetch(source, { method: "HEAD" }).then((response) => {
+    const type = (response.headers.get("content-type") || "").toLowerCase();
+    songAvailable[key] = response.ok && (/^audio\//.test(type) || type.includes("octet-stream"));
+  }).catch(() => { songAvailable[key] = false; });
+  musicElements[key].addEventListener("error", () => {
+    songAvailable[key] = false;
+    if (requestedScene === key && musicPlaying) {
+      switchSoundtrack(key, true);
+    }
+  });
+});
+
+function effectiveTrack() {
+  return songAvailable[requestedScene] ? requestedScene : "demo";
 }
 
-function chosenAudio() {
-  return currentTrack === "baraat" && !baraatTrackMissing ? baraatMusic : weddingMusic;
-}
-
-function setMusicState(isPlaying, announcement) {
-  musicPlaying = isPlaying;
-  musicDock.classList.toggle("is-playing", isPlaying);
-  musicToggle.setAttribute("aria-pressed", String(isPlaying));
-  const actionLabel = isPlaying ? "Pause music" : "Play music";
-  musicToggle.setAttribute("aria-label", actionLabel);
-  musicToggle.title = actionLabel;
-  musicToggleLabel.textContent = isPlaying ? "Music on" : "Music off";
-  musicDockCaption.textContent = currentTrack === "baraat" && !baraatTrackMissing
-    ? "A MELODY FOR THE BARAAT"
-    : "A LITTLE MUSIC FOR OUR LOVE STORY";
+function setMusicState(playing, announcement) {
+  musicPlaying = playing;
+  musicDock.classList.toggle("is-playing", playing);
+  musicToggle.setAttribute("aria-pressed", String(playing));
+  musicToggle.setAttribute("aria-label", playing ? "Pause music" : "Play music");
+  musicToggle.title = playing ? "Pause music" : "Play music";
+  musicToggleLabel.textContent = playing ? "Music on" : "Music off";
+  musicDockCaption.textContent = TRACK_LABELS[effectiveTrack()].toUpperCase();
   if (announcement) musicStatus.textContent = announcement;
 }
 
@@ -77,43 +90,46 @@ function fadeMusicIn(audio, requestId) {
     audio.volume = MUSIC_VOLUME;
     return;
   }
-  const started = performance.now();
-  const duration = 1500;
+  const start = performance.now();
+  const duration = 1400;
   const animate = (now) => {
     if (requestId !== musicRequestId || audio.paused) return;
-    const progress = Math.max(0, Math.min(1, (now - started) / duration));
-    audio.volume = MUSIC_VOLUME * (progress * (2 - progress));
-    if (progress < 1) fadeFrame = requestAnimationFrame(animate);
+    const fraction = Math.max(0, Math.min(1, (now - start) / duration));
+    audio.volume = MUSIC_VOLUME * (fraction * (2 - fraction));
+    if (fraction < 1) fadeFrame = requestAnimationFrame(animate);
   };
   fadeFrame = requestAnimationFrame(animate);
+}
+
+function stopAllMusic() {
+  Object.values(musicElements).forEach((audio) => audio.pause());
+  currentlyPlayingAudio = null;
 }
 
 function startWeddingMusic() {
   const requestId = ++musicRequestId;
   cancelAnimationFrame(fadeFrame);
-  const audio = chosenAudio();
-  const other = audio === weddingMusic ? baraatMusic : weddingMusic;
-  other.pause();
+  const key = effectiveTrack();
+  const audio = musicElements[key];
+  stopAllMusic();
+  currentlyPlayingAudio = audio;
   audio.volume = 0;
-  // `play()` happens synchronously inside the tap/click handler for mobile browsers.
+  // This call runs immediately in a visitor tap/click handler.
   const playRequest = audio.play();
   const onSuccess = () => {
     if (requestId !== musicRequestId) return;
-    setMusicState(true, currentTrack === "baraat" && !baraatTrackMissing
-      ? "Baraat music playing." : "Background music playing.");
+    setMusicState(true, `${TRACK_LABELS[key]} playing.`);
     fadeMusicIn(audio, requestId);
   };
   const onFailure = () => {
     if (requestId !== musicRequestId) return;
-    if (audio === baraatMusic) {
-      // The commercial recording is NOT bundled. Keep the original demo running
-      // rather than leaving visitors with a broken player.
-      baraatTrackMissing = true;
+    if (key !== "demo") {
+      songAvailable[key] = false;
       startWeddingMusic();
-      musicStatus.textContent = "Special Baraat recording is not installed; instrumental music is playing.";
+      musicStatus.textContent = `${TRACK_LABELS[key]} is not installed; original instrumental is playing.`;
       return;
     }
-    setMusicState(false, "Music could not start. Tap Music off to try again.");
+    setMusicState(false, "Music did not start. Tap the music control to try again.");
   };
   if (playRequest && typeof playRequest.then === "function") {
     playRequest.then(onSuccess).catch(onFailure);
@@ -125,19 +141,17 @@ function startWeddingMusic() {
 function pauseWeddingMusic() {
   ++musicRequestId;
   cancelAnimationFrame(fadeFrame);
-  weddingMusic.pause();
-  baraatMusic.pause();
+  stopAllMusic();
   setMusicState(false, "Music paused.");
 }
 
-function switchSoundtrack(track) {
-  if (currentTrack === track) return;
+function switchSoundtrack(scene, force = false) {
+  if (requestedScene === scene && !force) return;
   const wasPlaying = musicPlaying;
   ++musicRequestId;
   cancelAnimationFrame(fadeFrame);
-  weddingMusic.pause();
-  baraatMusic.pause();
-  currentTrack = track;
+  stopAllMusic();
+  requestedScene = scene;
   setMusicState(false);
   if (wasPlaying) startWeddingMusic();
 }
@@ -146,9 +160,9 @@ musicToggle.addEventListener("click", () => {
   if (musicPlaying) pauseWeddingMusic();
   else startWeddingMusic();
 });
-weddingMusic.addEventListener("error", () => {
-  if (chosenAudio() === weddingMusic) {
-    setMusicState(false, "Instrumental music could not be loaded.");
+musicElements.demo.addEventListener("error", () => {
+  if (currentlyPlayingAudio === musicElements.demo) {
+    setMusicState(false, "The background instrumental could not be loaded.");
   }
 });
 
@@ -226,7 +240,7 @@ document.querySelectorAll("[data-open-event]").forEach((button) => {
     lastOpenButton = button;
     dialog.classList.remove("is-revealed");
     dialog.showModal();
-    if (button.dataset.openEvent === "baraat") switchSoundtrack("baraat");
+    switchSoundtrack(button.dataset.openEvent);
     document.body.classList.add("no-scroll");
     requestAnimationFrame(() => requestAnimationFrame(() => dialog.classList.add("is-revealed")));
   });
@@ -238,7 +252,7 @@ dialogs.forEach((dialog) => {
     if (event.target === dialog) closeDialog(dialog);
   });
   dialog.addEventListener("close", () => {
-    if (dialog.id === "baraat-dialog") switchSoundtrack("ambient");
+    switchSoundtrack("website");
     dialog.classList.remove("is-revealed");
     document.body.classList.remove("no-scroll");
     if (lastOpenButton) lastOpenButton.focus({ preventScroll: true });
