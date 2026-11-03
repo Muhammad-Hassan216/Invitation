@@ -1,44 +1,25 @@
-# Pervisha & Waleed — Selected Wedding Songs (NO DEMO MUSIC)
+# Pervisha & Waleed — Wedding Invitation with Uploaded Recordings
 
-This version is prepared for **the three actual songs you selected**. The demo instrumentals from the previous ZIP were removed completely. **No commercial song recording is included.** The page will be silent until you supply the audio recordings you have rights to publish.
+This package contains your uploaded audio files, connected to the exact event cards.
 
-## Exact files to provide in `assets/`
+## Audio connections
 
-| Scene | Exact selected song | Required file |
-| --- | --- | --- |
-| Website / envelope / general sections | **Din Shagna Da — Jasleen Royal** | `assets/website-song.mp3` |
-| Mehndi invitation opened | **Mehndi Hai Rachnewali — Alka Yagnik** | `assets/mehndi-song.mp3` |
-| Baraat invitation opened | **Dulhe Ka Sehra Suhana Lagta Hai — Nusrat Fateh Ali Khan** | `assets/baraat-song.mp3` |
+- Envelope + general website: `assets/website-song.mp3` (the website audio you uploaded)
+- Mehndi invitation: **`assets/mahndi.mpeg`** (your exact uploaded MPEG recording; ~23 seconds)
+- Baraat invitation: **`assets/barat.mpeg`** (your exact uploaded MPEG recording; ~45 seconds)
 
-**IMPORTANT:** Please upload files from a source that permits publishing them on a public website. Downloading a track from a streaming subscription or linking to YouTube does not, by itself, give hosting permission. If you do not have permission to embed these recordings, get an appropriate license or use another legally publishable recording.
+No old `mehndi-song.mp3` or `baraat-song.mp3` demo is included or used.
 
-## How switching works
+## Test it
 
-1. Guest clicks the envelope -> website song is selected.
-2. Opens Mehndi card -> Mehndi recording plays, website audio stops.
-3. Closes card -> website song resumes.
-4. Opens Baraat card -> Baraat recording plays, website audio stops.
-5. Closes Baraat -> website song resumes.
-6. Guest may pause/resume at any time; card changes respect manual pauses.
+1. Open the `index.html` file in a browser or serve this folder with a local web server.
+2. Click **Open your invitation**; website audio starts after the click.
+3. Click **Mehndi**; only `mahndi.mpeg` should play.
+4. Close it, then click **Baraat**; only `barat.mpeg` should play.
+5. Pause/resume with Music button.
 
-If one MP3 is missing, the player **does not play any substitute music**. Instead it displays the missing filename; other scenes work if their own MP3s have been supplied.
+## Deploy to Vercel
 
-## Vercel upload
+Upload the **entire folder**, including `assets/`, to your existing project. Do not upload only HTML/JS/CSS; audio files must be deployed too. On Vercel, verify that `/assets/barat.mpeg` and `/assets/mahndi.mpeg` load. If you host recordings of commercial songs publicly, make sure you have the required permission.
 
-Place the three licensed MP3s with the filenames above inside `assets/` **before uploading** the folder to Vercel. Keep the project structure:
-
-```
-index.html
-script.js
-styles.css
-assets/
-  floral-corner.svg
-  rosette.svg
-  website-song.mp3    <- you add
-  mehndi-song.mp3     <- you add
-  baraat-song.mp3     <- you add
-```
-
-Deploy the extracted project folder, then open the Vercel site and test the envelope and both event cards. To confirm files served correctly, visit `https://YOURDOMAIN/assets/mehndi-song.mp3` etc. These URLs should return playable audio, not a 404.
-
-The standalone HTML is not provided here because audio cannot be embedded until the actual files exist.
+Note: The website audio in this package is the uploaded `website-song(1).mp3` file, not a verified commercial song recording.

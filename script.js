@@ -24,11 +24,8 @@ const openingButton = document.getElementById("open-invitation");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 let invitationOpened = false;
 
-// Three selected original film-song recordings are NOT bundled in this project.
-// Add legally authorized audio files using these exact names:
-// assets/website-song.mp3 -> Din Shagna Da (Jasleen Royal)
-// assets/mehndi-song.mp3 -> Mehndi Hai Rachnewali (Alka Yagnik)
-// assets/baraat-song.mp3 -> Dulhe Ka Sehra Suhana Lagta Hai (Nusrat Fateh Ali Khan)
+// Uploaded audio files: we use these exact recordings, not the old demo tracks.
+// assets/barat.mpeg and assets/mahndi.mpeg contain MP3 audio in MPEG containers.
 const musicElements = {
   website: document.getElementById("website-music"),
   mehndi: document.getElementById("mehndi-music"),
@@ -41,14 +38,14 @@ const musicDockCaption = document.getElementById("music-dock-caption");
 const musicStatus = document.getElementById("music-status");
 const MUSIC_VOLUME = 0.33;
 const TRACK_LABELS = {
-  website: "Din Shagna Da · Jasleen Royal",
-  mehndi: "Mehndi Hai Rachnewali · Alka Yagnik",
-  baraat: "Dulhe Ka Sehra Suhana Lagta Hai · Nusrat Fateh Ali Khan"
+  website: "Wedding background music",
+  mehndi: "Mehndi recording",
+  baraat: "Baraat recording"
 };
 const TRACK_FILENAMES = {
   website: "website-song.mp3",
-  mehndi: "mehndi-song.mp3",
-  baraat: "baraat-song.mp3"
+  mehndi: "mahndi.mpeg",
+  baraat: "barat.mpeg"
 };
 let musicPlaying = false;
 let musicDesired = false; // user opted in by opening the envelope or pressing Play
@@ -69,7 +66,7 @@ function setMusicState(playing, announcement = "") {
     button.setAttribute("aria-pressed", String(playing));
   });
   musicStatus.textContent = announcement;
-  musicStatus.classList.toggle("is-warning", !playing && announcement.includes("MP3"));
+  musicStatus.classList.toggle("is-warning", !playing && /missing|not found|blocked/i.test(announcement));
 }
 
 function pauseOtherTracks(except) {
@@ -105,20 +102,20 @@ function startWeddingMusic() {
   audio.volume = 0;
   // Browser reports NETWORK_NO_SOURCE when no playable MP3 exists.
   if (audio.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) {
-    setMusicState(false, `Song not uploaded yet. Add authorized MP3: assets/${TRACK_FILENAMES[scene]}`);
+    setMusicState(false, `Audio file missing: assets/${TRACK_FILENAMES[scene]}`);
     return;
   }
   // No demo song or fallback: if its licensed MP3 isn't uploaded, show a clear message.
   const missingWatchdog = window.setTimeout(() => {
     if (requestId === musicRequestId && !musicPlaying && audio.readyState === 0) {
       audio.pause();
-      setMusicState(false, `Song not uploaded yet. Add authorized MP3: assets/${TRACK_FILENAMES[scene]}`);
+      setMusicState(false, `Audio file missing: assets/${TRACK_FILENAMES[scene]}`);
     }
   }, 4500);
   let attempt;
   try { attempt = audio.play(); }
   catch (error) {
-    if (requestId === musicRequestId) setMusicState(false, `Please add the selected MP3: assets/${TRACK_FILENAMES[scene]}`);
+    if (requestId === musicRequestId) setMusicState(false, `Audio file missing: assets/${TRACK_FILENAMES[scene]}`);
     return;
   }
   Promise.resolve(attempt).then(() => {
@@ -130,7 +127,7 @@ function startWeddingMusic() {
     clearTimeout(missingWatchdog);
     if (requestId !== musicRequestId) return;
     audio.pause();
-    setMusicState(false, `Song file not found or playback blocked. Add authorized MP3: assets/${TRACK_FILENAMES[scene]}`);
+    setMusicState(false, `Audio file not found or playback blocked: assets/${TRACK_FILENAMES[scene]}`);
   });
 }
 
@@ -165,7 +162,7 @@ document.querySelectorAll("[data-dialog-music]").forEach(button => button.addEve
 Object.entries(musicElements).forEach(([scene, audio]) => {
   audio.addEventListener("error", () => {
     if (requestedScene === scene) {
-      setMusicState(false, `Song file not found. Add authorized MP3: assets/${TRACK_FILENAMES[scene]}`);
+      setMusicState(false, `Audio file not found: assets/${TRACK_FILENAMES[scene]}`);
     }
   });
 });
