@@ -531,3 +531,7 @@ body.music-visible .music-dock {
 /* Hide the keyboard skip link fully until focused; keep it accessible. */
 .skip-link { position:absolute; left:-9999px; top:auto; transform:none; }
 .skip-link:focus, .skip-link:focus-visible { position:fixed; left:12px; top:10px; transform:none; }
+
+/* Bride family correction — 04 November 2026 */
+.bride-father-name { display:inline-block; color:#513440; font-weight:600; }
+.late-emphasis { color:#8d6740; font-weight:700; }

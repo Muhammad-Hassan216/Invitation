@@ -25,3 +25,10 @@ Use only recordings you have the permission to publish publicly.
 - Other blessings and prayers are original invitation wording, not represented as Qur'an or Hadith.
 - Footer, RSVP, Mehndi and Baraat details have been updated.
 - The three audio files are unchanged: `assets/website.mpeg`, `assets/mahndi.mpeg`, `assets/barat.mpeg`.
+
+## Family detail
+- Bride's father is respectfully listed as **Late Mr. Laique Akhtar Khan**.
+
+## Verified update — 04 November 2026
+The family section explicitly displays **Beloved daughter of / Late Mr. Laique Akhtar Khan**.
+To confirm the current version is live after redeploy, visit `https://YOUR-VERCEL-DOMAIN/site-version.txt`. If it is missing, the new build has not been deployed.
