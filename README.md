@@ -17,3 +17,11 @@ Extract this ZIP, then deploy the complete project directory. Keep `index.html`,
 If audio is cached from an earlier deployment, do a hard reload or redeploy the full project. All three files are MPEG Layer III audio, with `.mpeg` extension; the `<source type="audio/mpeg">` declaration is retained for browser compatibility.
 
 Use only recordings you have the permission to publish publicly.
+
+## Islamic / bride-family wording update
+- All invitation wording is from the perspective of Pervisha Laique's family.
+- Mehndi card label uses **The Bride's Mehndi**, not **The Night Before**.
+- Family section includes Qur'an 78:8 (Sahih International translation) and a short excerpt of Qur'an 30:21, with references.
+- Other blessings and prayers are original invitation wording, not represented as Qur'an or Hadith.
+- Footer, RSVP, Mehndi and Baraat details have been updated.
+- The three audio files are unchanged: `assets/website.mpeg`, `assets/mahndi.mpeg`, `assets/barat.mpeg`.
