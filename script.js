@@ -3,9 +3,9 @@
 const eventData = {
   mehndi: {
     title: "Mehndi Night — Pervisha Laique",
-    startUtc: "20261126T140000Z",
-    // No end time was supplied; intentionally don't invent one.
-    description: "Mehndi ceremony of Pervisha Laique, hosted by Muqadsa Laique and Noor Shakeel. Begins at 7 PM Pakistan time. End time not supplied.",
+    startUtc: "20261126T130000Z",
+    endUtc: "20261126T170000Z",
+    description: "Mehndi ceremony of Pervisha Laique, hosted by Muqadsa Laique and Noor Shakeel. 6:00 PM to 10:00 PM Pakistan time.",
     location: "At Home, Moh. Naiyamat Pura"
   },
   baraat: {
