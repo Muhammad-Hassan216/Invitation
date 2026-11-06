@@ -5,15 +5,16 @@ const eventData = {
     title: "Mehndi Night — Pervisha Laique",
     startUtc: "20261126T130000Z",
     endUtc: "20261126T170000Z",
-    description: "Mehndi ceremony of Pervisha Laique, hosted by Muqadsa Laique and Noor Shakeel. 6:00 PM to 10:00 PM Pakistan time. Venue: Namak Mandi, Gujrat.",
-    location: "Namak Mandi, Gujrat, Pakistan"
+    description: "Mehndi ceremony of Pervisha Laique, hosted by Muqadsa Laique and Noor Shakeel. 6:00 PM to 10:00 PM Pakistan time. Venue: Namak Mandi, Main GT Road, near Shaheen Chowk, Stop Jamna, Gujrat, Pakistan.",
+    location: "Namak Mandi, Main GT Road, near Shaheen Chowk, Stop Jamna, Gujrat, Pakistan",
+    url: "https://share.google/ytICZ8pv3CjU6VgV4"
   },
   baraat: {
     title: "Baraat — Pervisha Laique & Waleed Khan",
     startUtc: "20261127T140000Z",
     endUtc: "20261127T170000Z",
     description: "Wedding Baraat celebration of Pervisha Laique and Waleed Khan. Baraat: 7:00 PM, Nikkah: 8:00 PM, Dinner: 8:30 PM, Ruksati: 9:00 PM Pakistan time.",
-    location: "Bhiya Marquee, Bypass Road, Gujrat, Pakistan",
+    location: "Bhiya Marquee, Bypass Road, near Shaheen Chowk, Gujrat, Pakistan",
     url: "https://maps.app.goo.gl/3RZAnP68aaE3Gpfh6"
   }
 };
